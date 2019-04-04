@@ -24,24 +24,29 @@ public class DruidConfig {
     }
 
     @Bean
-	public ServletRegistrationBean<StatViewServlet> statViewServlet() {
-	    ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
-        Map<String, String> initParams = new HashMap<>();
-        initParams.put("loginUsername", "admin");
-        initParams.put("loginPassword", "123456");
-        bean.setInitParameters(initParams);
-        return bean;
+    public ServletRegistrationBean statViewServlet(){
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+        registrationBean.setServlet(new StatViewServlet());
+        registrationBean.setUrlMappings(Arrays.asList("/druid/*"));
+        //设置初始化参数
+        Map<String,String> initMap = new HashMap<>();
+        initMap.put("loginUsername","admin");
+        initMap.put("loginPassword","123456");
+        initMap.put("allow","");
+        initMap.put("deny","192.168.2.110");
+        registrationBean.setInitParameters(initMap);
+        return registrationBean;
     }
-
     @Bean
-    public FilterRegistrationBean<WebStatFilter> webStatFilter() {
-        FilterRegistrationBean<WebStatFilter> bean = new FilterRegistrationBean<>();
-        bean.setFilter(new WebStatFilter());
-        Map<String, String> initParams = new HashMap<>();
-        initParams.put("exclusions", "*.js,*.css,/druid/*");
-        bean.setInitParameters(initParams);
-        bean.setUrlPatterns(Arrays.asList("/*"));
-        return bean;
+    public FilterRegistrationBean webStatFilter(){
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(new WebStatFilter());
+        registrationBean.setUrlPatterns(Arrays.asList("/*"));
+        //设置初始化参数
+        Map<String,String> initMap = new HashMap<>();
+        initMap.put("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        registrationBean.setInitParameters(initMap);
+        return registrationBean;
     }
 
 }
