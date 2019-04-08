@@ -1,0 +1,256 @@
+FORMAT: 1A
+HOST: http://localhost:8080/
+# AWS 价格服务
+## EC2 [/ec2]
+
+### 查询EC2所属操作系统 [GET]
++ Request (application/json)
+        
+        {
+            "location": "Asia Pacific (Tokyo)"
+        }
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "os":"Linux",
+                "sw":"NA"
+            },
+            {
+                "os":"Linux",
+                "sw":"SQL Ent"
+            }
+            {
+                "os":"Linux",
+                "sw":"SQL Std"
+            },
+            {
+                "os":"Linux",
+                "sw":"SQL Web"
+            },
+            {
+                "os":"RHEL",
+                "sw":"NA"
+            },
+            {
+                "os":"SUSE",
+                "sw":"NA"
+            },
+            {
+                "os":"Windows",
+                "sw":"NA"
+            },
+            {
+                "os":"Windows",
+                "sw":"SQL Ent"
+            },
+            {
+                "os":"Windows",
+                "sw":"SQL Std"
+            },
+            {
+                "os":"Windows",
+                "sw":"SQL Web"
+            }
+        ]
+
+### 查询EC2相关实例类型 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "os": "Linux",
+            "SW": "NA",
+            "dedicated": 0,
+            "term_type": "Ondemand"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "vcpu":"1",
+                    "instance":"m1.medium",
+                    "storage":"1 x 410",
+                    "memory":"3.75 GiB"
+                },
+                {
+                    "vcpu":"1",
+                    "instance":"m1.small",
+                    "storage":"1 x 160",
+                    "memory":"1.7 GiB"
+                },
+                {
+                    "vcpu":"1",
+                    "instance":"m3.medium",
+                    "storage":"1 x 4 SSD",
+                    "memory":"3.75 GiB"
+                }
+            ]
+            
+### 查询EC2RI实例类型的付款类型 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "os": "Linux",
+            "SW": "NA",
+            "instance": "t2.micro",
+            "dedicated": 0,
+            "term_type": "Reserved"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "lease_contract_length":"1yr",
+                    "purchase_option":"All Upfront",
+                    "offering_class":"convertible"
+                },
+                {
+                    "lease_contract_length":"1yr",
+                    "purchase_option":"All Upfront",
+                    "offering_class":"standard"
+                }
+            ]
+            
+### 查询EC2实例价格 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "os": "Linux",
+            "SW": "NA",
+            "instance": "t2.micro",
+            "dedicated": 0,
+            "term_type": "Reserved",
+            "lease_contract_length": "1yr",
+            "purchase_option": "All Upfront",
+            "offering_class": "convertible"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "unit":"Hrs",
+                    "price_per_unit":"0.0000000000",
+                    "currency":"USD"
+                },
+                {
+                    "unit":"Quantity",
+                    "price_per_unit":"47593",
+                    "currency":"USD"
+                }
+            ]
+
+## RDS [/rds]
+
+### 查询RDS数据库引擎 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "engine":"MySQL"
+                },
+                {
+                    "engine":"Oracle"
+                }
+            ]
+
+### 查询RDS数据库部署选项 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "engine":"MySQL"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "deployment_option":"Single-AZ"
+                },
+                {
+                    "deployment_option":"Multi-AZ"
+                }
+            ]
+
+### 查询RDS数据库实例类型 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "engine": "MySQL",
+            "devop": "Single-AZ",
+            "term_type": "OnDemand",
+            "edition": "Standard"
+        }
+        
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "instance": "d2.xlarge"
+                },
+                {
+                    "instance": "d2.2xlarge"
+                }
+            ]
+            
+### 查询RDS数据库实例价格 [GET]
+
++ Request (application/json)
+
+        {
+            "location": "Asia Pacific (Tokyo)",
+            "engine": "MySQL",
+            "devop": "Single-AZ",
+            "term_type": "OnDemand",
+            "edition": "Standard",
+            "instance": "d2.xlarge"
+        }
+        
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "unit":"Hrs",
+                    "price_per_unit":"0.0000000000",
+                    "currency":"USD"
+                },
+                {
+                    "unit":"Quantity",
+                    "price_per_unit":"47593",
+                    "currency":"USD"
+                }
+            ]
