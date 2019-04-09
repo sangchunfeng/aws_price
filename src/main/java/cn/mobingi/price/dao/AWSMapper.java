@@ -1,13 +1,15 @@
 package cn.mobingi.price.dao;
 
-import cn.mobingi.price.pojo.Person;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 @Repository
-public interface PersonMapper {
+public interface AWSMapper {
 
-    Person selectPersonById(Integer id);
+    List<Map<String,Object>> selectAWSInfoByParams(Map<String,Object> map);
 
 }

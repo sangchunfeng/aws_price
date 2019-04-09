@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mobingi.price.dao.AWSMapper">
+
+    <select id="selectAWSInfoByParams" parameterType="map" resultType="map" statementType="STATEMENT">
+      SELECT
+          ${request_name}
+      FROM
+          ${service_name}
+      WHERE
+          location = 'Asia Pacific (Tokyo)'
+      GROUP BY
+          ${group_by}
+      HAVING
+          operating_system != ''
+      AND operating_system != 'NA'
+      AND `pre_installed_s/_w` != ''
+    </select>
+
+</mapper>
