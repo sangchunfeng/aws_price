@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.mobingi.price.dao.AWSMapper">
-
     <select id="selectAWSInfoByParams" parameterType="map" resultType="map">
       SELECT
           ${request_name}
@@ -27,7 +26,5 @@
       GROUP BY
           ${group_by}
       HAVING ${having}
-
     </select>
-
 </mapper>
