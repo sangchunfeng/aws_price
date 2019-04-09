@@ -14,6 +14,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>Druid数据库连接池相关设置</p>
+ * @author sang
+ * @date 2019-04-09
+ * @version 1.0
+ */
 @Configuration
 public class DruidConfig {
 
