@@ -35,7 +35,7 @@ public class AWSController {
      * @param jsonParam 接收页面传递的JSON数据
      * @return 返回查询到的数据
      */
-    @RequestMapping(value = "price_service", method = RequestMethod.POST)
+    @RequestMapping(value = "/price_service", method = RequestMethod.POST)
     public Object selectAWSInfoByParams(@RequestBody JSONObject jsonParam) {
         try {
             Map<String, Object> map = new HashMap<>();
@@ -44,8 +44,8 @@ public class AWSController {
             //获取JSON中的request_name,映射列名
             String requestName = (String) jsonParam.get("request_name");
             //判断要查询的数据是否存在,如存在，直接从Map中获取并返回
-            if (null != DATA_MAP.get(serviceName + "." + requestName)) {
-                return DATA_MAP.get(serviceName + "." + requestName);
+            if (null != DATA_MAP.get(jsonParam.toString().replace(" ","").trim())) {
+                return DATA_MAP.get(jsonParam.toString().replace(" ","").trim());
             }
             map.put("service_name", env.getProperty(serviceName + ".table"));
             //获取properties文件中配置的列名
@@ -61,8 +61,6 @@ public class AWSController {
             map.put("group_by", env.getProperty(serviceName + "." + requestName + ".groupBy"));
             map.put("having", env.getProperty(serviceName + "." + requestName + ".having"));
             List<Map<String, Object>> mapList = awsService.selectAWSInfoByParams(map);
-            //如果Map中不存在当前数据，则将数据存入Map
-            //        DATA_MAP.putIfAbsent(serviceName + "." + requestName, mapList);
             //返回数据库查询的数据
             if (null == mapList || mapList.size() == 0) {
                 Map<String,Object> result = new HashMap<>();
@@ -70,6 +68,9 @@ public class AWSController {
                 result.put("code","400");
                 return result;
             }
+            //如果Map中不存在当前数据，则将数据存入Map
+            DATA_MAP.putIfAbsent(jsonParam.toString().replace(" ","").trim(), mapList);
+
             return mapList;
         } catch (Exception e) {
             Map<String,Object> result = new HashMap<>();

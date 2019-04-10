@@ -17,4 +17,5 @@ public interface AWSService {
      * @return 返回查询到的数据
      */
     List<Map<String,Object>> selectAWSInfoByParams(Map<String,Object> map);
+
 }

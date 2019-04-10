@@ -29,4 +29,5 @@ public class AWSServiceImpl implements AWSService {
     public List<Map<String, Object>> selectAWSInfoByParams(Map<String, Object> map) {
         return awsMapper.selectAWSInfoByParams(map);
     }
+
 }
