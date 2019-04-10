@@ -61,7 +61,7 @@ public class AWSController {
         map.put("having",env.getProperty(serviceName + "." + requestName + ".having"));
         List<Map<String,Object>> mapList = awsService.selectAWSInfoByParams(map);
         //如果Map中不存在当前数据，则将数据存入Map
-        DATA_MAP.putIfAbsent(serviceName + "." + requestName, mapList);
+//        DATA_MAP.putIfAbsent(serviceName + "." + requestName, mapList);
         //返回数据库查询的数据
         return mapList;
     }
