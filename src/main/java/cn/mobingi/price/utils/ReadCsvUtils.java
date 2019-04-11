@@ -56,6 +56,26 @@ public class ReadCsvUtils {
         return sb.toString().trim();
     }
 
+    public static List<String> getCsvHttpByIndex() throws Exception {
+        String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json";
+        URL url = new URL(indexURL);
+        HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
+        urlcon.connect();//获取连接
+        InputStream is = urlcon.getInputStream();
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+        String line;
+        List<String> csvURLList  = new ArrayList<>();
+        while((line = buffer.readLine())!=null){
+            line = line.trim().replace(" ","");
+            if (line.contains("currentVersionUrl")) {
+                line = line.split(":")[1].substring(1,line.split(":")[1].length() - 2);
+                csvURLList.add(line);
+            }
+        }
+        System.out.println(csvURLList);
+        return null;
+    }
+
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据</p>
      * @return 返回数据库表名，字段名，数据组成的Map
@@ -88,7 +108,7 @@ public class ReadCsvUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ReadCsvUtils.upperCaseToLowerCase("pre_installed_s/_w"));
+        System.out.println(ReadCsvUtils.getCsvHttpByIndex());
     }
 
 }

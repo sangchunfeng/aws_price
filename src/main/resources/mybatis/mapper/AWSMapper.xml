@@ -46,7 +46,7 @@
       CREATE TABLE ${tableName} (
         `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         <foreach collection="fields" item="word" separator=",">
-          ${word} VARCHAR(255) COLLATE utf8_general_ci NOT NULL
+          `${word}` VARCHAR(255) COLLATE utf8_general_ci NOT NULL DEFAULT ''
         </foreach>
         ,PRIMARY KEY (`id`)
       )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
@@ -56,12 +56,19 @@
     <insert id="insertData" parameterType="map">
       INSERT INTO ${tableName}
       <foreach collection="fields" item="field" separator="," open="(" close=")">
-          ${field}
+          `${field}`
       </foreach>
       VALUES
       <foreach collection="data" item="item" separator=",">
           <foreach collection="item.split(',')" item="content" open="(" separator="," close=")">
-              ${content}
+              <choose>
+                  <when test="content == null or content == '' or content == 'NA'">
+                     " "
+                  </when>
+                  <otherwise>
+                      ${content}
+                  </otherwise>
+              </choose>
           </foreach>
       </foreach>
     </insert>
