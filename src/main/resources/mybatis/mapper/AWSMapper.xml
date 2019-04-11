@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.mobingi.price.dao.AWSMapper">
+
+    <!-- 动态SQL，查询页面所需数据 -->
     <select id="selectAWSInfoByParams" parameterType="map" resultType="map">
       SELECT
           ${request_name}
@@ -28,5 +30,41 @@
       HAVING
           ${having}
     </select>
+
+    <!-- 删除已存在的数据库表 -->
+    <update id="dropTable" parameterType="map">
+      DROP TABLE ${tableName}
+    </update>
+
+    <!-- 判断数据库表是否存在 -->
+    <select id="existTable" parameterType="string" resultType="string">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <!-- 创建数据库表 -->
+    <update id="createTable" parameterType="map">
+      CREATE TABLE ${tableName} (
+        `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        <foreach collection="fields" item="word" separator=",">
+          ${word} VARCHAR(255) COLLATE utf8_general_ci NOT NULL
+        </foreach>
+        ,PRIMARY KEY (`id`)
+      )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+    </update>
+
+    <!-- 插入数据至数据库表 -->
+    <insert id="insertData" parameterType="map">
+      INSERT INTO ${tableName}
+      <foreach collection="fields" item="field" separator="," open="(" close=")">
+          ${field}
+      </foreach>
+      VALUES
+      <foreach collection="data" item="item" separator=",">
+          <foreach collection="item.split(',')" item="content" open="(" separator="," close=")">
+              ${content}
+          </foreach>
+      </foreach>
+    </insert>
+
 
 </mapper>
