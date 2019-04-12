@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>读取网页CSV价格文件工具类</p>
@@ -81,7 +78,8 @@ public class ReadCsvUtils {
      * @throws Exception 可能产生的异常
      */
     public static Map<String,Object> getTableNameAndTableData(String csvURL) throws Exception {
-        String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
+        //String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
+        String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/comprehend/current/index.csv";
         URL url = new URL(indexURL);
         HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
         urlcon.connect();//获取连接
@@ -102,12 +100,32 @@ public class ReadCsvUtils {
         Map<String,Object> map = new HashMap<>();
         map.put("tableName", tableName.substring(1,tableName.length() - 1));
         map.put("fields", lowerFields);
-        map.put("data", allString.subList(6, allString.size()));
+
+        List<String> dataList = new ArrayList<>();
+        List<List<String>> allDataList = new ArrayList<>();
+        for (int i = 0 ; i < allString.subList(6, allString.size()).size(); i++) {
+            dataList.clear();
+            for (String str : allString.subList(6, allString.size()).get(i).split("\",\"")) {
+                if (str.equals("")) {
+                    dataList.add("NA");
+                } else {
+                    dataList.add(str.replace("\"", ""));
+                }
+            }
+            if (lowerFields.size() != allString.subList(6, allString.size()).get(i).split("\",\"").length){
+                dataList.add("NA");
+            }
+            allDataList.add(dataList);
+        }
+        for (int j = 0; j < allDataList.size(); j++) {
+            System.out.println(allDataList.get(j));
+        }
+        map.put("data", allDataList);
         return map;
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ReadCsvUtils.getCsvHttpByIndex());
+        System.out.println(ReadCsvUtils.getTableNameAndTableData(""));
     }
 
 }

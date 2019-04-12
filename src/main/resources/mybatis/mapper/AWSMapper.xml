@@ -60,13 +60,13 @@
       </foreach>
       VALUES
       <foreach collection="data" item="item" separator=",">
-          <foreach collection="item.split(',')" item="content" open="(" separator="," close=")">
+          <foreach collection="item" item="content" open="(" separator="," close=")">
               <choose>
                   <when test="content == null or content == '' or content == 'NA'">
                      " "
                   </when>
                   <otherwise>
-                      ${content}
+                      '${content}'
                   </otherwise>
               </choose>
           </foreach>
