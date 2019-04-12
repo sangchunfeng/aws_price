@@ -72,8 +72,7 @@ public class ReadCsvUtils {
                 csvURLList.add(line);
             }
         }
-        System.out.println(csvURLList);
-        return null;
+        return csvURLList;
     }
 
     /**
@@ -81,8 +80,8 @@ public class ReadCsvUtils {
      * @return 返回数据库表名，字段名，数据组成的Map
      * @throws Exception 可能产生的异常
      */
-    public static Map<String,Object> getTableNameAndTableData() throws Exception {
-        String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSEvents/current/index.csv";
+    public static Map<String,Object> getTableNameAndTableData(String csvURL) throws Exception {
+        String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
         URL url = new URL(indexURL);
         HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
         urlcon.connect();//获取连接
