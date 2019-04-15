@@ -82,6 +82,8 @@ public class ReadCsvUtils {
             //String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRedshift/current/index.csv";
             URL url = new URL(indexURL);
             HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+            urlcon.setConnectTimeout(3 * 1000);
+            urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             urlcon.connect();//获取连接
             InputStream is = urlcon.getInputStream();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
@@ -112,7 +114,7 @@ public class ReadCsvUtils {
         URL url = new URL(httpURL);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         //设置超时间为3秒
-        conn.setConnectTimeout(3*1000);
+        conn.setConnectTimeout(3 * 1000);
         //防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
