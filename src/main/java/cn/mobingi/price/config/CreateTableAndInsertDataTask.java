@@ -4,6 +4,7 @@ import cn.mobingi.price.dao.AWSMapper;
 import cn.mobingi.price.utils.ReadCsvUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,10 +27,13 @@ public class CreateTableAndInsertDataTask {
     @Autowired
     private AWSMapper awsMapper;
 
+    @Autowired
+    private Environment env;
+
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据定时任务方法</p>
      */
-    @Scheduled(cron = "0 15 14 * * ?")
+    @Scheduled(cron = "0 20 15 * * ?")
     private void createTableAndInsertDataTask() {
         try {
             List<String> csvURLs = ReadCsvUtils.getCsvHttpByIndex();
@@ -44,6 +48,7 @@ public class CreateTableAndInsertDataTask {
                     awsMapper.insertData(map);
                 }
             }
+            ReadCsvUtils.dropDir("/Users/sang/Desktop/testSQL/");
         } catch (Exception e) {
             e.printStackTrace();
         }

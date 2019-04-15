@@ -1,5 +1,10 @@
 package cn.mobingi.price.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,6 +16,7 @@ import java.util.*;
  * @date 2019-04-11
  * @version 1.0
  */
+@Component
 public class ReadCsvUtils {
 
     /**
@@ -51,10 +57,17 @@ public class ReadCsvUtils {
         return sb.toString().trim();
     }
 
+    /**
+     * <p>获取AWS index.json文件，通过它获取每个服务价格表的URL</p>
+     * @return 返回每个服务的价格表URL
+     * @throws Exception 可能出现的异常
+     */
     public static List<String> getCsvHttpByIndex() throws Exception {
         String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json";
         URL url = new URL(indexURL);
         HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
+        urlcon.setConnectTimeout(3 * 1000);
+        urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
         urlcon.connect();//获取连接
         InputStream is = urlcon.getInputStream();
         BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
@@ -110,6 +123,13 @@ public class ReadCsvUtils {
         return null;
     }
 
+    /**
+     * <p>下载AWS服务价格CSV文件至文件夹</p>
+     * @param httpURL 网址URL
+     * @param path 文件存储路径
+     * @param fileName 文件名
+     * @throws Exception 可能出现的异常
+     */
     private static void downloadFile(String httpURL,String path,String fileName) throws Exception {
         URL url = new URL(httpURL);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -131,10 +151,10 @@ public class ReadCsvUtils {
         File file = new File(saveDir + File.separator + fileName);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);
-        if(fos!=null){
+        if(fos != null){
             fos.close();
         }
-        if(inputStream!=null){
+        if(inputStream != null){
             inputStream.close();
         }
 
@@ -151,8 +171,38 @@ public class ReadCsvUtils {
         return bos.toByteArray();
     }
 
+    /**
+     * <p>产出保存CSV文件的文件夹</p>
+     * @param path 文件夹路径
+     * @return 返回是否删除成功
+     */
+    public static boolean dropDir(String path) {
+        File file = new File(path);
+        if(!file.exists()){
+            return false;
+        }
+        if(file.isFile()){
+            return file.delete();
+        }
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if(f.isFile()){
+                if(!f.delete()){
+                    System.out.println(f.getAbsolutePath()+" delete error!");
+                    return false;
+                }
+            }else{
+                if(!dropDir(f.getAbsolutePath())){
+                    return false;
+                }
+            }
+        }
+        return file.delete();
+    }
+
     public static void main(String[] args) throws Exception {
         //ReadCsvUtils.downloadFile();
+        dropDir("/Users/sang/Desktop/aaa/");
         System.out.println("");
     }
 
