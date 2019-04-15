@@ -44,11 +44,9 @@
     <!-- 创建数据库表 -->
     <update id="createTable" parameterType="map">
         CREATE TABLE ${tableName} (
-        <!-- `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, -->
         <foreach collection="fields" item="word" separator=",">
           `${word}` VARCHAR(255) COLLATE utf8_general_ci NOT NULL DEFAULT ''
         </foreach>
-        <!-- ,PRIMARY KEY (`id`) -->
         )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
     </update>
 
