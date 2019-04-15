@@ -108,7 +108,7 @@ public class ReadCsvUtils {
         return null;
     }
 
-    public static void downloadFile(String httpURL,String path,String fileName) throws Exception {
+    private static void downloadFile(String httpURL,String path,String fileName) throws Exception {
         URL url = new URL(httpURL);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         //设置超时间为3秒
@@ -138,7 +138,7 @@ public class ReadCsvUtils {
 
     }
 
-    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+    private static  byte[] readInputStream(InputStream inputStream) throws IOException {
         byte[] buffer = new byte[1024];
         int len = 0;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
