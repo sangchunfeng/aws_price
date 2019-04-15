@@ -1,8 +1,6 @@
 package cn.mobingi.price.utils;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -77,55 +75,83 @@ public class ReadCsvUtils {
      * @return 返回数据库表名，字段名，数据组成的Map
      * @throws Exception 可能产生的异常
      */
-    public static Map<String,Object> getTableNameAndTableData(String csvURL) throws Exception {
-        //String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
-        String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/comprehend/current/index.csv";
-        URL url = new URL(indexURL);
-        HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
-        urlcon.connect();//获取连接
-        InputStream is = urlcon.getInputStream();
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
-        String line;
-        List<String> allString = new ArrayList<>();
-        while((line = buffer.readLine())!=null){
-            allString.add(line);
+    public static Map<String,Object> getTableNameAndTableData(String csvURL) {
+        OutputStream os = null;
+        try {
+            String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
+            //String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRedshift/current/index.csv";
+            URL url = new URL(indexURL);
+            HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+            urlcon.connect();//获取连接
+            InputStream is = urlcon.getInputStream();
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+            String line;
+            List<String> allString = new ArrayList<>();
+            while ((line = buffer.readLine()) != null) {
+                allString.add(line.replace("\"", ""));
+            }
+            String tableName = allString.get(4).split(",")[1].toLowerCase();
+            String[] fields = allString.get(5).split(",");
+            List<String> lowerFields = new ArrayList<>();
+            for (String title : fields) {
+                lowerFields.add(upperCaseToLowerCase(title));
+            }
+            downloadFile(indexURL,"/Users/sang/Desktop/testSQL/",tableName + ".csv");
+            Map<String, Object> map = new HashMap<>();
+            map.put("tableName", tableName);
+            map.put("fields", lowerFields);
+            map.put("filePath", "/Users/sang/Desktop/testSQL/" + tableName + ".csv");
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String tableName = allString.get(4).split(",")[1].toLowerCase();
-        String[] fields = allString.get(5).split(",");
-        List<String> lowerFields = new ArrayList<>();
-        for (String title:fields) {
-            title = title.substring(1, title.length() - 1);
-            lowerFields.add(upperCaseToLowerCase(title));
-        }
-        Map<String,Object> map = new HashMap<>();
-        map.put("tableName", tableName.substring(1,tableName.length() - 1));
-        map.put("fields", lowerFields);
+        return null;
+    }
 
-        List<String> dataList = new ArrayList<>();
-        List<List<String>> allDataList = new ArrayList<>();
-        for (int i = 0 ; i < allString.subList(6, allString.size()).size(); i++) {
-            dataList.clear();
-            for (String str : allString.subList(6, allString.size()).get(i).split("\",\"")) {
-                if (str.equals("")) {
-                    dataList.add("NA");
-                } else {
-                    dataList.add(str.replace("\"", ""));
-                }
-            }
-            if (lowerFields.size() != allString.subList(6, allString.size()).get(i).split("\",\"").length){
-                dataList.add("NA");
-            }
-            allDataList.add(dataList);
+    public static void downloadFile(String httpURL,String path,String fileName) throws Exception {
+        URL url = new URL(httpURL);
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3*1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(path);
+        if(!saveDir.exists()){
+            saveDir.mkdir();
         }
-        for (int j = 0; j < allDataList.size(); j++) {
-            System.out.println(allDataList.get(j));
+        File file = new File(saveDir + File.separator + fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if(fos!=null){
+            fos.close();
         }
-        map.put("data", allDataList);
-        return map;
+        if(inputStream!=null){
+            inputStream.close();
+        }
+
+    }
+
+    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ReadCsvUtils.getTableNameAndTableData(""));
+        //ReadCsvUtils.downloadFile();
+        System.out.println("");
     }
 
 }

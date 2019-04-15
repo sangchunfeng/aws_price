@@ -29,21 +29,21 @@ public class CreateTableAndInsertDataTask {
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据定时任务方法</p>
      */
-    @Scheduled(cron = "* 31 15 * * ?")
+    @Scheduled(cron = "0 15 14 * * ?")
     private void createTableAndInsertDataTask() {
         try {
-            List<String> csvURL = ReadCsvUtils.getCsvHttpByIndex();
-//            if (null != csvURL || csvURL.size() > 0) {
-//                for (String url : csvURL) {
-                    Map<String, Object> map = ReadCsvUtils.getTableNameAndTableData("");
+            List<String> csvURLs = ReadCsvUtils.getCsvHttpByIndex();
+            if (null != csvURLs || csvURLs.size() > 0) {
+                for (String csvURL : csvURLs) {
+                    Map<String, Object> map = ReadCsvUtils.getTableNameAndTableData(csvURL);
                     String tableName = (String)map.get("tableName");
                     if (!StringUtils.isEmpty(awsMapper.existTable(tableName))) {
                         awsMapper.dropTable(map);
                     }
                     awsMapper.createTable(map);
                     awsMapper.insertData(map);
-//                }
-//            }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
