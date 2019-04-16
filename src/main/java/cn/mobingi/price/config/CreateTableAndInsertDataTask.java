@@ -33,11 +33,11 @@ public class CreateTableAndInsertDataTask {
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据定时任务方法</p>
      */
-    @Scheduled(cron = "0 20 15 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     private void createTableAndInsertDataTask() {
         try {
             List<String> csvURLs = ReadCsvUtils.getCsvHttpByIndex();
-            if (null != csvURLs || csvURLs.size() > 0) {
+            if (null != csvURLs && csvURLs.size() > 0) {
                 for (String csvURL : csvURLs) {
                     Map<String, Object> map = ReadCsvUtils.getTableNameAndTableData(csvURL);
                     String tableName = (String)map.get("tableName");
