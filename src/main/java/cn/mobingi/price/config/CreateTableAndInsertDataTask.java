@@ -33,7 +33,7 @@ public class CreateTableAndInsertDataTask {
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据定时任务方法</p>
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 30 9 * * ?")
     private void createTableAndInsertDataTask() {
         try {
             List<String> csvURLs = ReadCsvUtils.getCsvHttpByIndex();
@@ -48,7 +48,7 @@ public class CreateTableAndInsertDataTask {
                     awsMapper.insertData(map);
                 }
             }
-            ReadCsvUtils.dropDir("/Users/sang/Desktop/testSQL/");
+            ReadCsvUtils.dropDir("/var/lib/mysql-files/testSQL/");
         } catch (Exception e) {
             e.printStackTrace();
         }
