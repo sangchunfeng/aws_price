@@ -4,10 +4,12 @@ import cn.mobingi.price.service.AWSService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Map;
  * @version 1.0
  */
 @RestController
+@EnableScheduling
 public class AWSController {
 
     public static final Map<String,Object> DATA_MAP = new HashMap<>();
@@ -88,5 +91,10 @@ public class AWSController {
             e.printStackTrace();
             return resultMap;
         }
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    private void clearDataMap() {
+        DATA_MAP.clear();
     }
 }
