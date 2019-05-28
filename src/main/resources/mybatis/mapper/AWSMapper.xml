@@ -14,7 +14,7 @@
           <foreach collection="params.keys" item="key">
               <choose>
                   <when test="key == 'tenancy'">
-                      AND ${key} != '${params[key]}'
+                      AND ${key} = '${params[key]}'
                   </when>
                   <when test="key == 'sw'">
                       AND `pre_installed_s/_w` = '${params[key]}'
