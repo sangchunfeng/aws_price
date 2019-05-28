@@ -37,8 +37,14 @@ public class AWSController {
      */
     @RequestMapping(value = "/price_service", method = RequestMethod.POST)
     public Object selectAWSInfoByParams(@RequestBody JSONObject jsonParam) {
+        Map<String,Object> resultMap = new HashMap<>();
         try {
-            Map<String, Object> map = new HashMap<>();
+            if (null == jsonParam) {
+                resultMap.put("message","未找到数据");
+                resultMap.put("code","400");
+                return resultMap;
+            }
+            Map<String, Object> paramMap = new HashMap<>();
             //获取JSON中的service_name,映射表名
             String serviceName = (String) jsonParam.get("service_name");
             //获取JSON中的request_name,映射列名
@@ -47,37 +53,35 @@ public class AWSController {
             if (null != DATA_MAP.get(jsonParam.toString().replace(" ","").trim())) {
                 return DATA_MAP.get(jsonParam.toString().replace(" ","").trim());
             }
-            map.put("service_name", env.getProperty(serviceName + ".table"));
+            paramMap.put("service_name", env.getProperty(serviceName + ".table"));
             //获取properties文件中配置的列名
-            map.put("request_name", env.getProperty(serviceName + "." + requestName));
+            paramMap.put("request_name", env.getProperty(serviceName + "." + requestName));
             //获取JSON数据中的params,映射查询参数
             Map<String, Object> jsonParamsMap = (Map<String, Object>) jsonParam.get("params");
             Map<String, Object> paramsMap = new HashMap<>();
             for (Map.Entry<String, Object> entry : jsonParamsMap.entrySet()) {
                 paramsMap.put(entry.getKey(), entry.getValue());
             }
-            map.put("params", paramsMap);
+            paramMap.put("params", paramsMap);
             //获取查询group by条件
-            map.put("group_by", env.getProperty(serviceName + "." + requestName + ".groupBy"));
-            map.put("having", env.getProperty(serviceName + "." + requestName + ".having"));
-            List<Map<String, Object>> mapList = awsService.selectAWSInfoByParams(map);
+            paramMap.put("group_by", env.getProperty(serviceName + "." + requestName + ".groupBy"));
+            paramMap.put("having", env.getProperty(serviceName + "." + requestName + ".having"));
+            List<Map<String, Object>> mapList = awsService.selectAWSInfoByParams(paramMap);
             //返回数据库查询的数据
             if (null == mapList || mapList.size() == 0) {
-                Map<String,Object> result = new HashMap<>();
-                result.put("message","未找到数据");
-                result.put("code","400");
-                return result;
+                resultMap.put("message","未找到数据");
+                resultMap.put("code","400");
+                return resultMap;
             }
             //如果Map中不存在当前数据，则将数据存入Map
             DATA_MAP.putIfAbsent(jsonParam.toString().replace(" ","").trim(), mapList);
 
             return mapList;
         } catch (Exception e) {
-            Map<String,Object> result = new HashMap<>();
-            result.put("message","服务器繁忙，请稍后重试");
-            result.put("code","500");
+            resultMap.put("message","服务器繁忙，请稍后重试");
+            resultMap.put("code","500");
             e.printStackTrace();
-            return result;
+            return resultMap;
         }
     }
 }
