@@ -40,8 +40,8 @@ public class AWSController {
         Map<String,Object> resultMap = new HashMap<>();
         try {
             if (null == jsonParam) {
-                resultMap.put("message","未找到数据");
-                resultMap.put("code","400");
+                resultMap.put("message","参数错误");
+                resultMap.put("code","500");
                 return resultMap;
             }
             Map<String, Object> paramMap = new HashMap<>();
@@ -58,6 +58,11 @@ public class AWSController {
             paramMap.put("request_name", env.getProperty(serviceName + "." + requestName));
             //获取JSON数据中的params,映射查询参数
             Map<String, Object> jsonParamsMap = (Map<String, Object>) jsonParam.get("params");
+            if (null == jsonParamsMap) {
+                resultMap.put("message","参数错误");
+                resultMap.put("code","500");
+                return resultMap;
+            }
             Map<String, Object> paramsMap = new HashMap<>();
             for (Map.Entry<String, Object> entry : jsonParamsMap.entrySet()) {
                 paramsMap.put(entry.getKey(), entry.getValue());
