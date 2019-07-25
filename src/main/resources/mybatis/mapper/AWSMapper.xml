@@ -60,5 +60,16 @@
         IGNORE 6 ROWS
     </insert>
 
+    <insert id="saveHistory" parameterType="map">
+        INSERT INTO history (uuid, dataString, exchangeRate, title, create_time)
+        VALUES (#{uuid}, #{dataString}, #{exchangeRate}, #{title}, #{createtime})
+    </insert>
+
+    <select id="selectHistoryByUUID" parameterType="string" resultType="map">
+        SELECT uuid, dataString, exchangeRate, title, create_time
+        FROM history
+        WHERE uuid = #{uuid}
+    </select>
+
 
 </mapper>

@@ -5,15 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <p>AWS 查询服务Controller</p>
@@ -97,4 +97,46 @@ public class AWSController {
     private void clearDataMap() {
         DATA_MAP.clear();
     }
+
+
+    @RequestMapping(value = "/price_service/users/getUserUuid", method = RequestMethod.POST)
+    public Object getUserUUid() {
+        Map<String,Object> resultMap = new HashMap<>();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        resultMap.put("status", true);
+        resultMap.put("data", uuid);
+        return resultMap;
+    }
+
+
+    @RequestMapping(value = "/price_service/histories/saveToHistory", method = RequestMethod.POST)
+    public void saveHistory(@RequestBody JSONObject jsonParam, HttpServletRequest request) {
+        String uuid = request.getHeader("uuid");
+        List data = (List)jsonParam.get("data");
+        String dataString = data.toString();
+        String exchangeRate = (String)jsonParam.get("exchange_rate");
+        String title = (String)jsonParam.get("title");
+        Map<String, Object> paramMap = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createtime = sdf.format(new Date());
+        paramMap.put("dataString", dataString);
+        paramMap.put("exchangeRate", exchangeRate);
+        paramMap.put("title", title);
+        paramMap.put("uuid", uuid);
+        paramMap.put("createtime", createtime);
+        awsService.saveHistory(paramMap);
+
+    }
+
+    @RequestMapping(value = "/price_service/histories/getHistoryList", method = RequestMethod.GET)
+    public Object listHistory(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String uuid = request.getHeader("uuid");
+        List<Map<String, Object>> historyList = awsService.selectHistoryByUUID(uuid);
+        resultMap.put("status",true);
+        resultMap.put("data", historyList);
+        return resultMap;
+    }
+
+
 }

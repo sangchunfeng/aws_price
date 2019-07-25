@@ -1,5 +1,6 @@
 package cn.mobingi.price.dao;
 
+import cn.mobingi.price.pojo.History;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -48,4 +49,8 @@ public interface AWSMapper {
      */
     void insertData(Map<String, Object> map);
 
+
+    void saveHistory(Map<String,Object> paramMap);
+
+    List<Map<String, Object>> selectHistoryByUUID(String uuid);
 }
