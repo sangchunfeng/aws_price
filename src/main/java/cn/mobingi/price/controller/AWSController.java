@@ -119,7 +119,7 @@ public class AWSController {
         Map<String, Object> paramMap = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createtime = sdf.format(new Date());
-        paramMap.put("dataString", dataString);
+        paramMap.put("data", dataString);
         paramMap.put("exchangeRate", exchangeRate);
         paramMap.put("title", title);
         paramMap.put("uuid", uuid);
@@ -135,6 +135,15 @@ public class AWSController {
         List<Map<String, Object>> historyList = awsService.selectHistoryByUUID(uuid);
         resultMap.put("status",true);
         resultMap.put("data", historyList);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/price_service/templates/getTemplateList", method = RequestMethod.GET)
+    public Object listTemplate() {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<Map<String, Object>> templateList = awsService.selectTemplateList();
+        resultMap.put("status",true);
+        resultMap.put("data", templateList);
         return resultMap;
     }
 
