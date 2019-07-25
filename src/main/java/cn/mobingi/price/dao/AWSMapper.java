@@ -53,4 +53,6 @@ public interface AWSMapper {
     void saveHistory(Map<String,Object> paramMap);
 
     List<Map<String, Object>> selectHistoryByUUID(String uuid);
+
+    List<Map<String,Object>> selectTemplateList();
 }

@@ -41,4 +41,9 @@ public class AWSServiceImpl implements AWSService {
         return awsMapper.selectHistoryByUUID(uuid);
     }
 
+    @Override
+    public List<Map<String, Object>> selectTemplateList() {
+        return awsMapper.selectTemplateList();
+    }
+
 }
