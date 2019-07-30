@@ -25,7 +25,7 @@ public class CurrentRateUtils {
     public static final String APPKEY ="5c116bf7e81c0cafde394540da52d2fd";
 
     public static String getUSDJPYTare() {
-        String result1 =null;
+        String result1 ;
         String url ="http://web.juhe.cn:8080/finance/exchange/rmbquot";
         Map params = new HashMap();
         params.put("key",APPKEY);
