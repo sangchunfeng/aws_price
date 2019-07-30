@@ -1,6 +1,7 @@
 package cn.mobingi.price.controller;
 
 import cn.mobingi.price.service.AWSService;
+import cn.mobingi.price.utils.CurrentRateUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -144,6 +145,15 @@ public class AWSController {
         List<Map<String, Object>> templateList = awsService.selectTemplateList();
         resultMap.put("status",true);
         resultMap.put("data", templateList);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/price_service/getRate", method = RequestMethod.GET)
+    public Object getRate() {
+        Map<String, Object> resultMap = new HashMap<>();
+        String rate = CurrentRateUtils.getUSDJPYTare();
+        resultMap.put("status",true);
+        resultMap.put("data", rate);
         return resultMap;
     }
 
