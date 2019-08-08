@@ -51,7 +51,7 @@ public class ReadCsvUtils {
      * @return 返回首字母小写的字符串
      */
     private static String toLowerCaseFirstOne(String str){
-        if(Character.isLowerCase(str.charAt(0))) {
+        if (Character.isLowerCase(str.charAt(0))) {
             return str;
         } else {
             return (new StringBuilder()).append(Character.toLowerCase(str.charAt(0))).append(str.substring(1)).toString();
@@ -77,7 +77,7 @@ public class ReadCsvUtils {
             }
         }
         StringBuilder sb = new StringBuilder();
-        for(String word: transfer){
+        for (String word: transfer) {
             sb.append(word);
         }
         return sb.toString().trim();
@@ -168,7 +168,7 @@ public class ReadCsvUtils {
 
         //文件保存位置
         File saveDir = new File(path);
-        if(!saveDir.exists()){
+        if (!saveDir.exists()) {
             saveDir.mkdir();
         }
         File file = new File(saveDir + File.separator + fileName);
@@ -183,7 +183,7 @@ public class ReadCsvUtils {
         byte[] buffer = new byte[1024];
         int len = 0;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while((len = inputStream.read(buffer)) != -1) {
+        while ((len = inputStream.read(buffer)) != -1) {
             bos.write(buffer, 0, len);
         }
         bos.close();
@@ -197,22 +197,22 @@ public class ReadCsvUtils {
      */
     public static boolean dropDir(String path) {
         File file = new File(path);
-        if(!file.exists()){
+        if (!file.exists()) {
             return false;
         }
-        if(file.isFile()){
+        if (file.isFile()) {
             return file.delete();
         }
         File[] files = file.listFiles();
         if (null != files && files.length > 0) {
             for (File f : files) {
-                if(f.isFile()){
-                    if(!f.delete()){
+                if (f.isFile()){
+                    if (!f.delete()) {
                         logger.error(f.getAbsolutePath()+" delete error!");
                         return false;
                     }
-                }else{
-                    if(!dropDir(f.getAbsolutePath())){
+                } else {
+                    if (!dropDir(f.getAbsolutePath())) {
                         return false;
                     }
                 }
