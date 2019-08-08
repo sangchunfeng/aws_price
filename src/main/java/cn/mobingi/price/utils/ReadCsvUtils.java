@@ -19,6 +19,28 @@ import java.util.*;
 @Component
 public class ReadCsvUtils {
 
+
+    private static String csvPath;
+
+    @Value("${csv.path}")
+    public void setCsvPath(String csvPath) {
+        ReadCsvUtils.csvPath = csvPath;
+    }
+
+    private static String awsIndexUrl;
+
+    @Value("${index.url}")
+    public static void setAwsIndexUrl(String awsIndexUrl) {
+        ReadCsvUtils.awsIndexUrl = awsIndexUrl;
+    }
+
+    private static String priceHost;
+
+    @Value("${price.host}")
+    public void setPriceHost(String priceHost) {
+        ReadCsvUtils.priceHost = priceHost;
+    }
+
     /**
      * <p>将CSV文件头中的字符串转换为首字母小写</p>
      * @param str 要转换的字符串
@@ -63,7 +85,7 @@ public class ReadCsvUtils {
      * @throws Exception 可能出现的异常
      */
     public static List<String> getCsvHttpByIndex() throws Exception {
-        String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json";
+        String indexURL = awsIndexUrl;
         URL url = new URL(indexURL);
         HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
         urlcon.setConnectTimeout(3 * 1000);
@@ -86,12 +108,10 @@ public class ReadCsvUtils {
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据</p>
      * @return 返回数据库表名，字段名，数据组成的Map
-     * @throws Exception 可能产生的异常
      */
     public static Map<String,Object> getTableNameAndTableData(String csvURL) {
-        OutputStream os = null;
         try {
-            String indexURL = "https://pricing.us-east-1.amazonaws.com" + csvURL.replace("json","csv");
+            String indexURL = priceHost + csvURL.replace("json","csv");
             //String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRedshift/current/index.csv";
             URL url = new URL(indexURL);
             HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
@@ -111,11 +131,11 @@ public class ReadCsvUtils {
             for (String title : fields) {
                 lowerFields.add(upperCaseToLowerCase(title));
             }
-            downloadFile(indexURL,"/Users/sang/Desktop/testSQL/",tableName + ".csv");
+            downloadFile(indexURL, csvPath,tableName + ".csv");
             Map<String, Object> map = new HashMap<>();
             map.put("tableName", tableName);
             map.put("fields", lowerFields);
-            map.put("filePath", "/Users/sang/Desktop/testSQL/" + tableName + ".csv");
+            map.put("filePath", csvPath + tableName + ".csv");
             return map;
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,12 +170,8 @@ public class ReadCsvUtils {
         File file = new File(saveDir + File.separator + fileName);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);
-        if(fos != null){
-            fos.close();
-        }
-        if(inputStream != null){
-            inputStream.close();
-        }
+        fos.close();
+        inputStream.close();
 
     }
 
@@ -197,12 +213,6 @@ public class ReadCsvUtils {
             }
         }
         return file.delete();
-    }
-
-    public static void main(String[] args) throws Exception {
-        //ReadCsvUtils.downloadFile();
-        dropDir("/Users/sang/Desktop/aaa/");
-        System.out.println("");
     }
 
 }
