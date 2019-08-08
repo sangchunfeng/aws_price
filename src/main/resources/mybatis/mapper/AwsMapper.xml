@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.mobingi.price.dao.AWSMapper">
+<mapper namespace="cn.mobingi.price.dao.AwsMapper">
 
     <!-- 动态SQL，查询页面所需数据 -->
-    <select id="selectAWSInfoByParams" parameterType="map" resultType="map">
+    <select id="selectAwsInfoByParams" parameterType="map" resultType="map">
       SELECT
           ${request_name}
       FROM

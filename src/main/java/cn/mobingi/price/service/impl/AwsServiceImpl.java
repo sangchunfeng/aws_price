@@ -1,7 +1,7 @@
 package cn.mobingi.price.service.impl;
 
-import cn.mobingi.price.dao.AWSMapper;
-import cn.mobingi.price.service.AWSService;
+import cn.mobingi.price.dao.AwsMapper;
+import cn.mobingi.price.service.AwsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import java.util.Map;
  * @version 1.0
  */
 @Service(value = "awsService")
-public class AWSServiceImpl implements AWSService {
+public class AwsServiceImpl implements AwsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AWSServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AwsServiceImpl.class);
 
     @Autowired
-    private AWSMapper awsMapper;
+    private AwsMapper awsMapper;
 
     /**
      * 根据页面的JSON参数查询相关数据
@@ -30,8 +30,8 @@ public class AWSServiceImpl implements AWSService {
      * @return 返回查询到的数据
      */
     @Override
-    public List<Map<String, Object>> selectAWSInfoByParams(Map<String, Object> map) {
-        return awsMapper.selectAWSInfoByParams(map);
+    public List<Map<String, Object>> selectAwsInfoByParams(Map<String, Object> map) {
+        return awsMapper.selectAwsInfoByParams(map);
     }
 
 }

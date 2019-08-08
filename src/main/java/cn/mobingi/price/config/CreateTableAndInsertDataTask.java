@@ -1,7 +1,9 @@
 package cn.mobingi.price.config;
 
-import cn.mobingi.price.dao.AWSMapper;
+import cn.mobingi.price.dao.AwsMapper;
 import cn.mobingi.price.utils.ReadCsvUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -24,8 +26,10 @@ import java.util.Map;
 @EnableScheduling
 public class CreateTableAndInsertDataTask {
 
+    private static final Logger logger = LoggerFactory.getLogger(CreateTableAndInsertDataTask.class);
+
     @Autowired
-    private AWSMapper awsMapper;
+    private AwsMapper awsMapper;
 
     @Autowired
     private Environment env;
@@ -36,10 +40,10 @@ public class CreateTableAndInsertDataTask {
     @Scheduled(cron = "0 7 14 * * ?")
     private void createTableAndInsertDataTask() {
         try {
-            List<String> csvURLs = ReadCsvUtils.getCsvHttpByIndex();
-            if (null != csvURLs && csvURLs.size() > 0) {
-                for (String csvURL : csvURLs) {
-                    Map<String, Object> map = ReadCsvUtils.getTableNameAndTableData(csvURL);
+            List<String> csvUrls = ReadCsvUtils.getCsvHttpByIndex();
+            if (null != csvUrls && csvUrls.size() > 0) {
+                for (String csvUrl : csvUrls) {
+                    Map<String, Object> map = ReadCsvUtils.getTableNameAndTableData(csvUrl);
                     String tableName = (String)map.get("tableName");
                     if (!StringUtils.isEmpty(awsMapper.existTable(tableName))) {
                         awsMapper.dropTable(map);

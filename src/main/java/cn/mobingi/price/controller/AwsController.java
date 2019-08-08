@@ -1,7 +1,6 @@
 package cn.mobingi.price.controller;
 
-import cn.mobingi.price.service.AWSService;
-import cn.mobingi.price.service.impl.AWSServiceImpl;
+import cn.mobingi.price.service.AwsService;
 import cn.mobingi.price.utils.CurrentRateUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -27,14 +24,14 @@ import java.util.*;
  */
 @RestController
 @EnableScheduling
-public class AWSController {
+public class AwsController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AWSController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AwsController.class);
 
     public static final Map<String,Object> DATA_MAP = new HashMap<>();
 
     @Autowired
-    private AWSService awsService;
+    private AwsService awsService;
 
     @Autowired
     private Environment env;
@@ -45,7 +42,7 @@ public class AWSController {
      * @return 返回查询到的数据
      */
     @RequestMapping(value = "/price_service", method = RequestMethod.POST)
-    public Object selectAWSInfoByParams(@RequestBody JSONObject jsonParam) {
+    public Object selectAwsInfoByParams(@RequestBody JSONObject jsonParam) {
         Map<String,Object> resultMap = new HashMap<>();
         try {
             if (null == jsonParam) {
@@ -80,7 +77,7 @@ public class AWSController {
             //获取查询group by条件
             paramMap.put("group_by", env.getProperty(serviceName + "." + requestName + ".groupBy"));
             paramMap.put("having", env.getProperty(serviceName + "." + requestName + ".having"));
-            List<Map<String, Object>> mapList = awsService.selectAWSInfoByParams(paramMap);
+            List<Map<String, Object>> mapList = awsService.selectAwsInfoByParams(paramMap);
             //返回数据库查询的数据
             if (null == mapList || mapList.size() == 0) {
                 resultMap.put("message","未找到数据");
@@ -99,60 +96,6 @@ public class AWSController {
         }
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
-    private void clearDataMap() {
-        DATA_MAP.clear();
-    }
-
-
-    @RequestMapping(value = "/price_service/users/getUserUuid", method = RequestMethod.POST)
-    public Object getUserUUid() {
-        Map<String,Object> resultMap = new HashMap<>();
-        String uuid = UUID.randomUUID().toString().replace("-", "");
-        resultMap.put("status", true);
-        resultMap.put("data", uuid);
-        return resultMap;
-    }
-
-
-    @RequestMapping(value = "/price_service/histories/saveToHistory", method = RequestMethod.POST)
-    public void saveHistory(@RequestBody JSONObject jsonParam, HttpServletRequest request) {
-        String uuid = request.getHeader("uuid");
-        List data = (List)jsonParam.get("data");
-        String dataString = data.toString();
-        String exchangeRate = (String)jsonParam.get("exchange_rate");
-        String title = (String)jsonParam.get("title");
-        Map<String, Object> paramMap = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String createtime = sdf.format(new Date());
-        paramMap.put("data", dataString);
-        paramMap.put("exchangeRate", exchangeRate);
-        paramMap.put("title", title);
-        paramMap.put("uuid", uuid);
-        paramMap.put("createtime", createtime);
-        awsService.saveHistory(paramMap);
-
-    }
-
-    @RequestMapping(value = "/price_service/histories/getHistoryList", method = RequestMethod.GET)
-    public Object listHistory(HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        String uuid = request.getHeader("uuid");
-        List<Map<String, Object>> historyList = awsService.selectHistoryByUUID(uuid);
-        resultMap.put("status",true);
-        resultMap.put("data", historyList);
-        return resultMap;
-    }
-
-    @RequestMapping(value = "/price_service/templates/getTemplateList", method = RequestMethod.GET)
-    public Object listTemplate() {
-        Map<String, Object> resultMap = new HashMap<>();
-        List<Map<String, Object>> templateList = awsService.selectTemplateList();
-        resultMap.put("status",true);
-        resultMap.put("data", templateList);
-        return resultMap;
-    }
-
     @RequestMapping(value = "/price_service/getRate", method = RequestMethod.GET)
     public Object getRate() {
         Map<String, Object> resultMap = new HashMap<>();
@@ -162,5 +105,9 @@ public class AWSController {
         return resultMap;
     }
 
+    @Scheduled(cron = "0 0 1 * * ?")
+    private void clearDataMap() {
+        DATA_MAP.clear();
+    }
 
 }

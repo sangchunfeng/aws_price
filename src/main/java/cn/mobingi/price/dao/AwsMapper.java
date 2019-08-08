@@ -14,14 +14,14 @@ import java.util.Map;
  */
 @Mapper
 @Repository
-public interface AWSMapper {
+public interface AwsMapper {
 
     /**
      * <p>根据页面的JSON参数查询相关数据</p>
      * @param map 由页面JSON参数拼装成的参数map
      * @return 返回查询到的数据
      */
-    List<Map<String,Object>> selectAWSInfoByParams(Map<String, Object> map);
+    List<Map<String,Object>> selectAwsInfoByParams(Map<String, Object> map);
 
     /**
      * <p>判断要插入的表是否存在</p>
