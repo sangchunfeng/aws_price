@@ -1,6 +1,5 @@
 package cn.mobingi.price.dao;
 
-import cn.mobingi.price.pojo.History;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
