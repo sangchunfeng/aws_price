@@ -20,13 +20,4 @@ public interface AWSService {
      */
     List<Map<String,Object>> selectAWSInfoByParams(Map<String,Object> map);
 
-    /**
-     * 根据页面的JSON参数保存历史
-     * @param paramMap 由页面JSON参数拼装成的参数map
-     */
-    void saveHistory(Map<String,Object> paramMap);
-
-    List<Map<String, Object>> selectHistoryByUUID(String uuid);
-
-    List<Map<String,Object>> selectTemplateList();
 }

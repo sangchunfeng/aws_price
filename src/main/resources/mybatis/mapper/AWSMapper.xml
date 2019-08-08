@@ -60,21 +60,4 @@
         IGNORE 6 ROWS
     </insert>
 
-    <insert id="saveHistory" parameterType="map">
-        INSERT INTO history (uuid, `data`, exchange_rate, title, create_time)
-        VALUES (#{uuid}, #{data}, #{exchangeRate}, #{title}, #{createtime})
-    </insert>
-
-    <select id="selectHistoryByUUID" parameterType="string" resultType="map">
-        SELECT id, uuid, `data`, exchange_rate, title, create_time
-        FROM history
-        WHERE uuid = #{uuid}
-    </select>
-
-    <select id="selectTemplateList" resultType="map">
-        SELECT id, uuid, title, introduction, image_path, `data`, exchange_rate, create_time
-        FROM template
-    </select>
-
-
 </mapper>

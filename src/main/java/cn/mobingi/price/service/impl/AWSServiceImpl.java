@@ -34,19 +34,4 @@ public class AWSServiceImpl implements AWSService {
         return awsMapper.selectAWSInfoByParams(map);
     }
 
-    @Override
-    public void saveHistory(Map<String, Object> paramMap) {
-        awsMapper.saveHistory(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> selectHistoryByUUID(String uuid) {
-        return awsMapper.selectHistoryByUUID(uuid);
-    }
-
-    @Override
-    public List<Map<String, Object>> selectTemplateList() {
-        return awsMapper.selectTemplateList();
-    }
-
 }

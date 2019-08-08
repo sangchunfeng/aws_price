@@ -48,10 +48,4 @@ public interface AWSMapper {
      */
     void insertData(Map<String, Object> map);
 
-
-    void saveHistory(Map<String,Object> paramMap);
-
-    List<Map<String, Object>> selectHistoryByUUID(String uuid);
-
-    List<Map<String,Object>> selectTemplateList();
 }
