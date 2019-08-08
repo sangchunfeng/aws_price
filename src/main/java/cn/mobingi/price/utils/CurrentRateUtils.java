@@ -14,8 +14,20 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+/**
+ * <p>读取美元兑日元汇率工具类</p>
+ * @author sang
+ * @date 2019-04-11
+ * @version 1.0
+ */
+@Component
 public class CurrentRateUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(CurrentRateUtils.class);
 
     public static final String DEF_CHATSET = "UTF-8";
     public static final int DEF_CONN_TIMEOUT = 30000;

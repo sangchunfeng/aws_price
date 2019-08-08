@@ -1,8 +1,11 @@
 package cn.mobingi.price.controller;
 
 import cn.mobingi.price.service.AWSService;
+import cn.mobingi.price.service.impl.AWSServiceImpl;
 import cn.mobingi.price.utils.CurrentRateUtils;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -25,6 +28,8 @@ import java.util.*;
 @RestController
 @EnableScheduling
 public class AWSController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AWSController.class);
 
     public static final Map<String,Object> DATA_MAP = new HashMap<>();
 

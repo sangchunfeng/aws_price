@@ -1,8 +1,9 @@
 package cn.mobingi.price.service.impl;
 
 import cn.mobingi.price.dao.AWSMapper;
-import cn.mobingi.price.pojo.History;
 import cn.mobingi.price.service.AWSService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Map;
  */
 @Service(value = "awsService")
 public class AWSServiceImpl implements AWSService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AWSServiceImpl.class);
 
     @Autowired
     private AWSMapper awsMapper;

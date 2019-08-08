@@ -1,14 +1,17 @@
 package cn.mobingi.price.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>读取网页CSV价格文件工具类</p>
@@ -19,6 +22,7 @@ import java.util.*;
 @Component
 public class ReadCsvUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReadCsvUtils.class);
 
     private static String csvPath;
 
@@ -200,15 +204,17 @@ public class ReadCsvUtils {
             return file.delete();
         }
         File[] files = file.listFiles();
-        for (File f : files) {
-            if(f.isFile()){
-                if(!f.delete()){
-                    System.out.println(f.getAbsolutePath()+" delete error!");
-                    return false;
-                }
-            }else{
-                if(!dropDir(f.getAbsolutePath())){
-                    return false;
+        if (null != files && files.length > 0) {
+            for (File f : files) {
+                if(f.isFile()){
+                    if(!f.delete()){
+                        logger.error(f.getAbsolutePath()+" delete error!");
+                        return false;
+                    }
+                }else{
+                    if(!dropDir(f.getAbsolutePath())){
+                        return false;
+                    }
                 }
             }
         }
