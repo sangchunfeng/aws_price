@@ -76,7 +76,7 @@ public class ReadCsvUtils {
                 transfer.add(String.valueOf(chars[i]));
             }
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for(String word: transfer){
             sb.append(word);
         }
@@ -89,8 +89,8 @@ public class ReadCsvUtils {
      * @throws Exception 可能出现的异常
      */
     public static List<String> getCsvHttpByIndex() throws Exception {
-        String indexURL = awsIndexUrl;
-        URL url = new URL(indexURL);
+        String indexUrl = awsIndexUrl;
+        URL url = new URL(indexUrl);
         HttpURLConnection urlcon = (HttpURLConnection)url.openConnection();
         urlcon.setConnectTimeout(3 * 1000);
         urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
@@ -98,26 +98,26 @@ public class ReadCsvUtils {
         InputStream is = urlcon.getInputStream();
         BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
         String line;
-        List<String> csvURLList  = new ArrayList<>();
+        List<String> csvUrlList  = new ArrayList<>();
         while((line = buffer.readLine())!=null){
             line = line.trim().replace(" ","");
             if (line.contains("currentVersionUrl")) {
                 line = line.split(":")[1].substring(1,line.split(":")[1].length() - 2);
-                csvURLList.add(line);
+                csvUrlList.add(line);
             }
         }
-        return csvURLList;
+        return csvUrlList;
     }
 
     /**
      * <p>从价格CSV文件中获取数据库表名，字段名以及数据</p>
      * @return 返回数据库表名，字段名，数据组成的Map
      */
-    public static Map<String,Object> getTableNameAndTableData(String csvURL) {
+    public static Map<String,Object> getTableNameAndTableData(String csvUrl) {
         try {
-            String indexURL = priceHost + csvURL.replace("json","csv");
+            String indexUrl = priceHost + csvUrl.replace("json","csv");
             //String indexURL = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRedshift/current/index.csv";
-            URL url = new URL(indexURL);
+            URL url = new URL(indexUrl);
             HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
             urlcon.setConnectTimeout(3 * 1000);
             urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
@@ -135,7 +135,7 @@ public class ReadCsvUtils {
             for (String title : fields) {
                 lowerFields.add(upperCaseToLowerCase(title));
             }
-            downloadFile(indexURL, csvPath,tableName + ".csv");
+            downloadFile(indexUrl, csvPath,tableName + ".csv");
             Map<String, Object> map = new HashMap<>();
             map.put("tableName", tableName);
             map.put("fields", lowerFields);
@@ -149,13 +149,13 @@ public class ReadCsvUtils {
 
     /**
      * <p>下载AWS服务价格CSV文件至文件夹</p>
-     * @param httpURL 网址URL
+     * @param httpUrl 网址URL
      * @param path 文件存储路径
      * @param fileName 文件名
      * @throws Exception 可能出现的异常
      */
-    private static void downloadFile(String httpURL,String path,String fileName) throws Exception {
-        URL url = new URL(httpURL);
+    private static void downloadFile(String httpUrl,String path,String fileName) throws Exception {
+        URL url = new URL(httpUrl);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         //设置超时间为3秒
         conn.setConnectTimeout(3 * 1000);
