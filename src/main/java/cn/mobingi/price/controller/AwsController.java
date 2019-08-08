@@ -96,6 +96,10 @@ public class AwsController {
         }
     }
 
+    /**
+     * 查询美元兑日元汇率
+     * @return 返回美元兑日元汇率
+     */
     @RequestMapping(value = "/price_service/getRate", method = RequestMethod.GET)
     public Object getRate() {
         Map<String, Object> resultMap = new HashMap<>();
@@ -105,6 +109,10 @@ public class AwsController {
         return resultMap;
     }
 
+
+    /**
+     * 每天凌晨1点,清空缓存Map,因为0点做数据库更新,会有数据变化
+     */
     @Scheduled(cron = "0 0 1 * * ?")
     private void clearDataMap() {
         DATA_MAP.clear();
